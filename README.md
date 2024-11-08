@@ -37,8 +37,8 @@ jobs:
 
 | Input | Description | Required | Default |
 | ----- | ----------- | -------- | ------- |
-| [`summary`](#summary) | Whether or not to show release url on summary | No | "true" |
-| [`token`](#token) | GitHub Personal Access Token | No | ${{ github.token }} |
+| [`summary`](#summary) | Whether or not to show release url on summary | No | `"true"` |
+| [`token`](#token) | GitHub Personal Access Token | No | `${{ github.token }}` |
 | [`tag_name`](#tag_name) | Tag name to be used for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
 | [`make_latest`](#make_latest) | Specifies whether this release should be set as the latest release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs)  |
 | [`files`](#files) | Newline-delimited globs of paths to assets to upload for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
@@ -49,7 +49,7 @@ Whether or not to show release url on summary. Anything other than `false` will 
 
 ### `token`
 
-GitHub Personal Access Token. If you don't pass this input, it will default to ${{ github.token }}
+GitHub Personal Access Token. If you don't pass this input, it will default to `${{ github.token }}`
 
 ### `tag_name`
 
