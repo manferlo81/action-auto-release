@@ -23,6 +23,7 @@ steps:
   - name: Create GitHub Release
     uses: manferlo81/action-auto-release@v1
     with:
+      tag_name: ${{ github.ref_name }}
       files: file.txt
       summary: false
 ```
@@ -32,12 +33,17 @@ steps:
 | Input | Description | Required | Default |
 | ----- | ----------- | -------- | ------- |
 | [`summary`](#summary) | Whether or not to show release url on summary | No | "true" |
+| [`tag_name`](#tag_name) | Tag name to be used for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
 | [`make_latest`](#make_latest) | Specifies whether this release should be set as the latest release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs)  |
 | [`files`](#files) | Newline-delimited globs of paths to assets to upload for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
 
 ### `summary`
 
 Whether or not to show release url on summary. Anything other than `false` will default to `true`.
+
+### `tag_name`
+
+Tag name to be used for release. This input [will be passed unchanged](#source) to [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2). Check their documentation [here](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs).
 
 ### `make_latest`
 
@@ -75,6 +81,10 @@ inputs:
     required: false
     default: "true"
 
+  tag_name:
+    description: Tag name to be used for release
+    required: false
+
   make_latest:
     description: Specifies whether this release should be set as the latest release.
     required: false
@@ -103,9 +113,10 @@ runs:
       id: create-release
       uses: softprops/action-gh-release@v2
       with:
-        generate_release_notes: true
+        tag_name: ${{ inputs.tag_name }}
         make_latest: ${{ inputs.make_latest }}
-        files: ${{ input.files }}
+        generate_release_notes: true
+        files: ${{ inputs.files }}
 
     - name: Show Release URL on summary
       if: inputs.summary != "false"
