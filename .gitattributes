@@ -1,0 +1,9 @@
+*               text=auto
+
+*.yaml          text        eol=fl
+*.yml           text        eol=fl
+*.md            text        eol=fl
+
+.gitattributes  text        eol=fl
+.*config        text        eol=fl
+LICENSE         text        eol=fl

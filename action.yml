@@ -1,0 +1,21 @@
+name: Action name
+description: Action description
+
+author: Manuel Fernández
+
+branding:
+  icon: download
+  color: green
+
+inputs:
+  user:
+    description: User name
+    required: false
+    default: "Unknown"
+
+runs:
+  using: composite
+  steps:
+    - name: Show username
+      shell: bash
+      run: echo "Action called by user ( ${{ inputs.user }} )"
