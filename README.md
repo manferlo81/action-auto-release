@@ -37,9 +37,9 @@ jobs:
 
 | Input | Description | Required | Default |
 | ----- | ----------- | -------- | ------- |
-| [`summary`](#summary) | Whether or not to show release url on summary | No | "true" |
+| [`summary`](#summary) | Whether or not to show release url on summary | No | `"true"` |
+| [`token`](#token) | GitHub Personal Access Token | No | `${{ github.token }}` |
 | [`tag_name`](#tag_name) | Tag name to be used for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
-| [`token`](#token) | GitHub Personal Access Token | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
 | [`make_latest`](#make_latest) | Specifies whether this release should be set as the latest release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs)  |
 | [`files`](#files) | Newline-delimited globs of paths to assets to upload for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
 
@@ -47,13 +47,13 @@ jobs:
 
 Whether or not to show release url on summary. Anything other than `false` will default to `true`.
 
+### `token`
+
+GitHub Personal Access Token. If you don't pass this input, it will default to `${{ github.token }}`
+
 ### `tag_name`
 
 Tag name to be used for release. This input [will be passed unchanged](#source) to [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2). Check their documentation [here](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs).
-
-### `token`
-
-GitHub Personal Access Token. This input [will be passed unchanged](#source) to [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2). Check their documentation [here](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs).
 
 ### `make_latest`
 
@@ -99,13 +99,12 @@ inputs:
     required: false
     default: "true"
 
-  tag_name:
-    description: Tag name to be used for release
-    required: false
-    # default: handled by softprops/action-gh-release
-
   token:
     description: GitHub Personal Access Token
+    required: false
+
+  tag_name:
+    description: Tag name to be used for release
     required: false
     # default: handled by softprops/action-gh-release
 
@@ -141,7 +140,7 @@ runs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ inputs.tag_name }}
-        token: ${{ inputs.token }}
+        token: ${{ inputs.token || github.token }}
         make_latest: ${{ inputs.make_latest }}
         generate_release_notes: true
         files: ${{ inputs.files }}

@@ -13,13 +13,12 @@ inputs:
     required: false
     default: "true"
 
-  tag_name:
-    description: Tag name to be used for release
-    required: false
-    # default: handled by softprops/action-gh-release
-
   token:
     description: GitHub Personal Access Token
+    required: false
+
+  tag_name:
+    description: Tag name to be used for release
     required: false
     # default: handled by softprops/action-gh-release
 
@@ -52,21 +51,10 @@ runs:
   steps:
     - name: Create GitHub Release
       id: create-release
-      if: ${{ !inputs.token }}
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ inputs.tag_name }}
-        make_latest: ${{ inputs.make_latest }}
-        generate_release_notes: true
-        files: ${{ inputs.files }}
-
-    - name: Create GitHub Release
-      id: create-release-with-token
-      if: steps.create-release.conclusion == 'skipped'
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: ${{ inputs.tag_name }}
-        token: ${{ inputs.token }}
+        token: ${{ inputs.token || github.token }}
         make_latest: ${{ inputs.make_latest }}
         generate_release_notes: true
         files: ${{ inputs.files }}
@@ -77,6 +65,4 @@ runs:
       run: |
         echo "### GitHub Release Created!" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "${{ env.RELEASE_URL }}" >> $GITHUB_STEP_SUMMARY
-      env:
-        RELEASE_URL: ${{ steps.create-release.conclusion == 'skipped' && steps.create-release-with-token.outputs.url || steps.create-release.outputs.url }}
+        echo "${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
