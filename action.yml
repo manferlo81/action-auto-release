@@ -52,6 +52,17 @@ runs:
   steps:
     - name: Create GitHub Release
       id: create-release
+      if: ${{ !inputs.token }}
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ inputs.tag_name }}
+        make_latest: ${{ inputs.make_latest }}
+        generate_release_notes: true
+        files: ${{ inputs.files }}
+
+    - name: Create GitHub Release
+      id: create-release-with-token
+      if: steps.create-release.conclusion == 'skipped'
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ inputs.tag_name }}
@@ -66,4 +77,6 @@ runs:
       run: |
         echo "### GitHub Release Created!" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ env.RELEASE_URL }}" >> $GITHUB_STEP_SUMMARY
+      env:
+        RELEASE_URL: ${{ steps.create-release.conclusion == 'skipped' && steps.create-release-with-token.outputs.url || steps.create-release.outputs.url }}
