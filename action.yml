@@ -13,14 +13,20 @@ inputs:
     required: false
     default: "true"
 
+  tag_name:
+    description: Tag name to be used for release
+    required: false
+    # default: handled by softprops/action-gh-release
+
   make_latest:
     description: Specifies whether this release should be set as the latest release.
     required: false
-    default: "true"
+    # default: handled by softprops/action-gh-release
 
   files:
     description: Newline-delimited globs of paths to assets to upload for release
     required: false
+    # default: handled by softprops/action-gh-release
 
 outputs:
   url:
@@ -42,12 +48,13 @@ runs:
       id: create-release
       uses: softprops/action-gh-release@v2
       with:
-        generate_release_notes: true
+        tag_name: ${{ inputs.tag_name }}
         make_latest: ${{ inputs.make_latest }}
+        generate_release_notes: true
         files: ${{ inputs.files }}
 
     - name: Show Release URL on summary
-      if: ${{ inputs.summary != 'false' }}
+      if: inputs.summary != 'false'
       shell: bash
       run: |
         echo "### GitHub Release Created!" >> $GITHUB_STEP_SUMMARY
