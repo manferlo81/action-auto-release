@@ -8,6 +8,7 @@ A composite GitHub action to create a GitHub Release with auto-generated release
 * [Usage](#usage)
 * [Inputs](#inputs)
 * [Outputs](#outputs)
+* [Permissions](#permissions)
 * [Source](#source)
 
 ## Used Actions
@@ -19,13 +20,17 @@ The following actions are being used in this composite action...
 ## Usage
 
 ```yaml
-steps:
-  - name: Create GitHub Release
-    uses: manferlo81/action-auto-release@v1
-    with:
-      tag_name: ${{ github.ref_name }}
-      files: file.txt
-      summary: false
+jobs:
+  create_release:
+    permissions:
+      contents: write
+    steps:
+      - name: Create GitHub Release
+        uses: manferlo81/action-auto-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: file.txt
+          summary: false
 ```
 
 ## Inputs
@@ -66,6 +71,10 @@ Release ID. This output is coming from [`softprops/action-gh-release@v2`](https:
 ### `upload_url`
 
 URL for uploading assets to the release. This output is coming from [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2). Check their documentation [here](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#outputs).
+
+## Permissions
+
+[`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2) requires the `contents` permission to be set to `write`. You can read more about that in [their documentation permissions section](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#permissions).
 
 ## Source
 
