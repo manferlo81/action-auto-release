@@ -39,6 +39,7 @@ jobs:
 | ----- | ----------- | -------- | ------- |
 | [`summary`](#summary) | Whether or not to show release url on summary | No | "true" |
 | [`tag_name`](#tag_name) | Tag name to be used for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
+| [`token`](#token) | GitHub Personal Access Token | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
 | [`make_latest`](#make_latest) | Specifies whether this release should be set as the latest release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs)  |
 | [`files`](#files) | Newline-delimited globs of paths to assets to upload for release | No | handled by [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs) |
 
@@ -49,6 +50,10 @@ Whether or not to show release url on summary. Anything other than `false` will 
 ### `tag_name`
 
 Tag name to be used for release. This input [will be passed unchanged](#source) to [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2). Check their documentation [here](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs).
+
+### `token`
+
+GitHub Personal Access Token. This input [will be passed unchanged](#source) to [`softprops/action-gh-release@v2`](https://github.com/softprops/action-gh-release/tree/v2). Check their documentation [here](https://github.com/softprops/action-gh-release/tree/v2?tab=readme-ov-file#inputs).
 
 ### `make_latest`
 
@@ -84,6 +89,10 @@ description: A composite GitHub action to create a GitHub Release with auto-gene
 
 author: Manuel Fernández
 
+branding:
+  icon: upload
+  color: purple
+
 inputs:
   summary:
     description: Whether or not to show release url on summary
@@ -93,14 +102,22 @@ inputs:
   tag_name:
     description: Tag name to be used for release
     required: false
+    # default: handled by softprops/action-gh-release
+
+  token:
+    description: GitHub Personal Access Token
+    required: false
+    # default: handled by softprops/action-gh-release
 
   make_latest:
     description: Specifies whether this release should be set as the latest release.
     required: false
+    # default: handled by softprops/action-gh-release
 
   files:
     description: Newline-delimited globs of paths to assets to upload for release
     required: false
+    # default: handled by softprops/action-gh-release
 
 outputs:
   url:
@@ -117,18 +134,20 @@ outputs:
 
 runs:
   using: composite
+
   steps:
     - name: Create GitHub Release
       id: create-release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ inputs.tag_name }}
+        token: ${{ inputs.token }}
         make_latest: ${{ inputs.make_latest }}
         generate_release_notes: true
         files: ${{ inputs.files }}
 
     - name: Show Release URL on summary
-      if: inputs.summary != "false"
+      if: inputs.summary != 'false'
       shell: bash
       run: |
         echo "### GitHub Release Created!" >> $GITHUB_STEP_SUMMARY
