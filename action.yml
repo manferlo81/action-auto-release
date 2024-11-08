@@ -1,21 +1,55 @@
-name: Action name
-description: Action description
+name: GitHub Auto Release
+description: A composite GitHub action to create a GitHub Release with auto-generated release notes
 
 author: Manuel Fernández
 
 branding:
-  icon: download
-  color: green
+  icon: upload
+  color: purple
 
 inputs:
-  user:
-    description: User name
+  summary:
+    description: Whether or not to show release url on summary
     required: false
-    default: "Unknown"
+    default: "true"
+
+  make_latest:
+    description: Specifies whether this release should be set as the latest release.
+    required: false
+    default: "true"
+
+  files:
+    description: Newline-delimited globs of paths to assets to upload for release
+    required: false
+
+outputs:
+  url:
+    description: "URL to the Release HTML Page"
+    value: ${{ steps.create-release.outputs.url }}
+
+  id:
+    description: "Release ID"
+    value: ${{ steps.create-release.outputs.id }}
+
+  upload_url:
+    description: "URL for uploading assets to the release"
+    value: ${{ steps.create-release.outputs.upload_url }}
 
 runs:
   using: composite
   steps:
-    - name: Show username
+    - name: Create GitHub Release
+      id: create-release
+      uses: softprops/action-gh-release@v2
+      with:
+        generate_release_notes: true
+        make_latest: ${{ inputs.make_latest }}
+        files: ${{ inputs.files }}
+
+    - name: Show Release URL on summary
+      if: ${{ inputs.summary != 'false' }}
       shell: bash
-      run: echo "Action called by user ( ${{ inputs.user }} )"
+      run: |
+        echo "### GitHub Release Created!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "${{ steps.create-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY

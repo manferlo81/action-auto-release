@@ -2,26 +2,19 @@ changelog:
   exclude:
     labels:
       - exclude from release
-      - exclude-from-release
-      - no-release
 
   categories:
     - title: BREAKING CHANGES
       labels:
         - breaking change
-        - breaking-change
-        - breaking
 
     - title: Features
       labels:
         - feature
-        - feat
 
     - title: Bug Fixes
       labels:
         - bug fix
-        - bug-fix
-        - fix
 
     - title: Other Changes
       labels:
