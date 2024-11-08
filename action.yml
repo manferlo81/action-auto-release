@@ -18,6 +18,11 @@ inputs:
     required: false
     # default: handled by softprops/action-gh-release
 
+  token:
+    description: GitHub Personal Access Token
+    required: false
+    # default: handled by softprops/action-gh-release
+
   make_latest:
     description: Specifies whether this release should be set as the latest release.
     required: false
@@ -43,12 +48,14 @@ outputs:
 
 runs:
   using: composite
+
   steps:
     - name: Create GitHub Release
       id: create-release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ inputs.tag_name }}
+        token: ${{ inputs.token }}
         make_latest: ${{ inputs.make_latest }}
         generate_release_notes: true
         files: ${{ inputs.files }}
